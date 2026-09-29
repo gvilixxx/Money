@@ -1,0 +1,15 @@
+{
+  "brand": "אתר ביום",
+  "owner_name": "",
+  "phone_display": "",
+  "whatsapp_e164": "",
+  "email": "",
+  "business_id": "",
+  "payment_link": "",
+  "site_base_url": "https://gvilixxx.github.io/Money",
+  "price_setup": 1490,
+  "price_monthly": 99,
+  "daily_new_leads": 5,
+  "target_cities": ["פתח תקווה", "ראשון לציון"],
+  "target_niches": ["חשמלאי", "אינסטלטור", "טכנאי מזגנים", "דיאטנית קלינית", "פיזיותרפיה"]
+}

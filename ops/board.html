@@ -1,0 +1,269 @@
+<title>לידים של אתר ביום</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karantina:wght@700&family=Assistant:wght@400;600;700&display=swap">
+<style>
+/* layout: one column of lead cards grouped by pipeline stage; the stage tabs are the only navigation */
+:root{
+  --bg:#F3F6F4;--surface:#FFFFFF;--ink:#0F1D2B;--muted:#56646F;--line:#DCE3DF;
+  --green:#0B7A4E;--on-green:#FFFFFF;--green-soft:#DFF3E9;
+  --amber:#8A5800;--amber-soft:#FDF1D8;--red:#B42318;--red-soft:#FDE8E6;--blue:#1F5FAD;--blue-soft:#E4EEFB;
+  --display:'Karantina','Assistant',system-ui,sans-serif;--body:'Assistant',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1613;--surface:#16211D;--ink:#E6EFEA;--muted:#9AABA3;--line:#2A3A33;
+  --green:#40C58C;--on-green:#06140E;--green-soft:#143427;
+  --amber:#F0B44C;--amber-soft:#3A2C12;--red:#F2847A;--red-soft:#3B1B18;--blue:#86B5F2;--blue-soft:#16273D;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1613;--surface:#16211D;--ink:#E6EFEA;--muted:#9AABA3;--line:#2A3A33;
+  --green:#40C58C;--on-green:#06140E;--green-soft:#143427;
+  --amber:#F0B44C;--amber-soft:#3A2C12;--red:#F2847A;--red-soft:#3B1B18;--blue:#86B5F2;--blue-soft:#16273D;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;direction:rtl}
+.page{max-width:44rem;margin-inline:auto;padding-inline:16px;padding-block:18px 48px}
+h1,h2{font-family:var(--display);font-weight:700;line-height:1;margin:0;text-wrap:balance}
+h1{font-size:2.6rem}
+h2{font-size:1.9rem;margin-bottom:10px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.date{color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
+.summary{margin:10px 0 0;color:var(--ink);font-size:1.05rem}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:16px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.stat b{display:block;font-family:var(--display);font-size:2.1rem;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:.9rem;font-weight:600}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px}
+.tab{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-weight:600;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab .n{font-variant-numeric:tabular-nums;opacity:.75;margin-inline-start:4px}
+.list{display:grid;gap:12px}
+.lead{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;min-width:0}
+.lead-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.lead h3{margin:0;font-size:1.2rem}
+.meta{color:var(--muted);font-size:.95rem;margin:2px 0 0}
+.pill{flex:none;font-size:.8rem;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.p-ready{background:var(--green-soft);color:var(--green)}
+.p-sent{background:var(--blue-soft);color:var(--blue)}
+.p-yes{background:var(--amber-soft);color:var(--amber)}
+.p-paid{background:var(--green);color:var(--on-green)}
+.p-no{background:var(--red-soft);color:var(--red)}
+.links{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 0 0;font-size:.95rem}
+.links a{color:var(--blue);font-weight:600}
+.phone{font-variant-numeric:tabular-nums;user-select:all}
+.msg{white-space:pre-wrap;background:var(--bg);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;margin:10px 0;font-size:.98rem;overflow-wrap:anywhere}
+.label{font-size:.85rem;font-weight:700;color:var(--muted);margin:10px 0 -4px;letter-spacing:.02em}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:8px 14px;border-radius:10px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn:hover{border-color:var(--ink)}
+.btn-wa{background:var(--green);color:var(--on-green);border-color:var(--green)}
+.btn-wa:hover{filter:brightness(1.07);border-color:var(--green)}
+.btn-no{color:var(--red)}
+.btn[disabled]{opacity:.55;cursor:progress}
+.btn:focus-visible,.tab:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.note{color:var(--muted);font-size:.93rem;margin:8px 0 0}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:16px;padding:22px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-size:1.1rem;margin-bottom:4px}
+section.box{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:22px}
+.setup{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.setup li{display:flex;gap:10px;align-items:flex-start}
+.dot{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:700;margin-top:1px}
+.dot.ok{background:var(--green);color:var(--on-green)}
+.dot.todo{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber)}
+.setup small{display:block;color:var(--muted)}
+.toast{position:fixed;inset-inline:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:24rem;margin-inline:auto;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-weight:600;text-align:center}
+@media (max-width:420px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:2.2rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="page">
+  <header class="head">
+    <h1>לידים של אתר ביום</h1>
+    <span class="date" id="date"></span>
+  </header>
+  <p class="summary" id="summary">הריצה הבאה של Claude תמלא כאן את הלידים של היום.</p>
+
+  <div class="stats" id="stats" aria-live="polite"></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="list" id="list"></div>
+
+  <section class="box" id="post-box" hidden>
+    <h2>פוסט השבוע לקבוצות</h2>
+    <p class="msg" id="post-text"></p>
+    <div class="row"><button class="btn" type="button" id="copy-post">העתקת הפוסט</button></div>
+  </section>
+
+  <section class="box">
+    <h2>מה עוד חסר כדי שהכל ירוץ לבד</h2>
+    <ul class="setup" id="setup"></ul>
+  </section>
+
+  <p class="note">כל בוקר, בימים ראשון עד חמישי, Claude מחפש עסקים בלי אתר, בונה לכל אחד טיוטה, ומכין כאן הודעה אחת לשליחה. מה שנשאר לך: לפתוח את ההודעה בוואטסאפ, לשלוח, ולסמן מה ענו.</p>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+const STAGES = [
+  {key:"ready", tab:"לשלוח", stat:"לשלוח היום", pill:"מוכן לשליחה"},
+  {key:"sent",  tab:"ממתינים", stat:"ממתינים לתשובה", pill:"נשלח"},
+  {key:"yes",   tab:"הסכימו", stat:"הסכימו לראות", pill:"הסכימו"},
+  {key:"paid",  tab:"לקוחות", stat:"לקוחות משלמים", pill:"לקוח"},
+  {key:"no",    tab:"סגורים", stat:null, pill:"לא רלוונטי"}
+];
+const STAGE_OF = s => (s === "live" ? "paid" : (s === "no_reply" || s === "closed" ? "no" : s));
+const DEFAULT_SETUP = [
+  {label:"פרטי קשר בדף הנחיתה", hint:"שם, מספר וואטסאפ ושם העסק שלך", done:false},
+  {label:"הפעלת GitHub Pages בריפו", hint:"Settings, אחר כך Pages, ענף main ותיקייה docs", done:false},
+  {label:"גישה מלאה לרשת בסביבה", hint:"בלי זה Claude לא יכול לשלוף טלפונים ופרטים של עסקים", done:false},
+  {label:"קישור לתשלום", hint:"למשל דף תשלום במורנינג, שמוציא קבלה אוטומטית", done:false},
+  {label:"פתיחת עוסק פטור", hint:"באתר רשות המסים, בחינם", done:false}
+];
+
+const state = {leads:[], today:null, post:null, setup:null, tab:"ready", db:null, busy:new Set(), dbError:null};
+try { const t = localStorage.getItem("board-tab"); if (t && STAGES.some(s => s.key === t)) state.tab = t; } catch (_) {}
+
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const waHref = (phone, text) => {
+  const d = String(phone || "").replace(/\D/g, "");
+  return d ? `https://wa.me/${d}?text=${encodeURIComponent(text || "")}` : "";
+};
+const fmtDate = iso => { try { return new Date(iso).toLocaleDateString("he-IL", {day:"numeric", month:"numeric"}); } catch (_) { return ""; } };
+
+function toast(text){
+  const t = $("toast"); t.textContent = text; t.hidden = false;
+  clearTimeout(toast.h); toast.h = setTimeout(() => { t.hidden = true; }, 2200);
+}
+
+function renderStats(){
+  const counts = Object.fromEntries(STAGES.map(s => [s.key, 0]));
+  state.leads.forEach(l => { const k = STAGE_OF(l.status); if (k in counts) counts[k]++; });
+  $("stats").innerHTML = STAGES.filter(s => s.stat).map(s =>
+    `<div class="stat"><b>${counts[s.key]}</b><span>${esc(s.stat)}</span></div>`).join("");
+  $("tabs").innerHTML = STAGES.map(s =>
+    `<button class="tab" role="tab" type="button" data-tab="${s.key}" aria-selected="${state.tab === s.key}">${esc(s.tab)}<span class="n">${counts[s.key]}</span></button>`).join("");
+}
+
+function messageBlock(lead, text, label){
+  if (!text) return "";
+  const href = waHref(lead.waPhone || lead.phone, text);
+  return `<p class="label">${esc(label)}</p><p class="msg">${esc(text)}</p>
+    <div class="row">
+      ${href ? `<a class="btn btn-wa" href="${esc(href)}" target="_blank" rel="noopener">פתיחה בוואטסאפ</a>` : ""}
+      <button class="btn" type="button" data-copy="${esc(lead.id)}" data-field="${text === lead.msgFirst ? "msgFirst" : text === lead.msgDemo ? "msgDemo" : "msgPaid"}">העתקה</button>
+    </div>`;
+}
+
+function actionButtons(lead){
+  const b = (to, text, cls="") => `<button class="btn ${cls}" type="button" data-id="${esc(lead.id)}" data-to="${to}" ${state.busy.has(lead.id) ? "disabled" : ""}>${esc(text)}</button>`;
+  switch (STAGE_OF(lead.status)) {
+    case "ready": return `<div class="row">${b("sent", "סימון: נשלח")}${b("no", "לדלג על העסק", "btn-no")}</div>`;
+    case "sent":  return `<div class="row">${b("yes", "הסכימו לראות טיוטה")}${b("no", "לא מעוניינים", "btn-no")}</div>`;
+    case "yes":   return `<div class="row">${b("paid", "שילמו")}${b("no", "לא מעוניינים", "btn-no")}</div>`;
+    case "no":    return `<div class="row">${b("ready", "החזרה לרשימה")}</div>`;
+    default: return "";
+  }
+}
+
+function renderLead(lead){
+  const stage = STAGE_OF(lead.status);
+  const meta = STAGES.find(s => s.key === stage) || STAGES[0];
+  let body = "";
+  if (stage === "ready") body = messageBlock(lead, lead.msgFirst, "הודעה ראשונה: בקשת הסכמה בלבד");
+  if (stage === "sent") body = `<p class="note">נשלח ${lead.sentAt ? "ב-" + esc(fmtDate(lead.sentAt)) : ""}. לפי חוק הספאם לא שולחים הודעה נוספת בלי תשובה.</p>`;
+  if (stage === "yes") body = messageBlock(lead, lead.msgDemo, "הודעה שנייה: קישור לטיוטה ומחיר");
+  if (stage === "paid") body = lead.msgPaid ? messageBlock(lead, lead.msgPaid, "הצעדים לעלייה לאוויר") : `<p class="note">Claude יכין בריצה הבאה את האתר הסופי ואת ההוראות לחיבור הדומיין.</p>`;
+  const links = [
+    lead.demoUrl ? `<a href="${esc(lead.demoUrl)}" target="_blank" rel="noopener">הטיוטה</a>` : "",
+    lead.source ? `<a href="${esc(lead.source)}" target="_blank" rel="noopener">${esc(lead.sourceLabel || "המקור")}</a>` : "",
+    lead.phone ? `<span class="phone">${esc(lead.phone)}</span>` : ""
+  ].filter(Boolean).join("");
+  return `<article class="lead">
+    <div class="lead-top"><div><h3>${esc(lead.name)}</h3><p class="meta">${esc([lead.profession, lead.city].filter(Boolean).join(" · "))}</p></div>
+    <span class="pill p-${stage}">${esc(meta.pill)}</span></div>
+    ${links ? `<div class="links">${links}</div>` : ""}
+    ${lead.note ? `<p class="note">${esc(lead.note)}</p>` : ""}
+    ${body}
+    ${actionButtons(lead)}
+  </article>`;
+}
+
+function renderList(){
+  if (state.dbError) {
+    $("list").innerHTML = `<div class="empty"><b>הלוח לא מחובר לנתונים כרגע</b>${esc(state.dbError)}</div>`;
+    return;
+  }
+  const items = state.leads.filter(l => STAGE_OF(l.status) === state.tab)
+    .sort((a, b) => String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || "")));
+  if (!items.length) {
+    const msgs = {
+      ready: ["אין הודעות לשליחה כרגע", "בכל בוקר Claude מוסיף כאן עסקים חדשים עם טיוטה והודעה מוכנה."],
+      sent: ["אין פניות שממתינות לתשובה", "אחרי ששולחים הודעה ומסמנים \"נשלח\", העסק עובר לכאן."],
+      yes: ["עוד אין עסקים שהסכימו", "כשעסק עונה \"כן\", מסמנים אותו, וכאן תופיע הודעה עם הקישור לטיוטה."],
+      paid: ["עוד אין לקוחות משלמים", "הלקוח הראשון יופיע כאן יחד עם הצעדים לעלייה לאוויר."],
+      no: ["אין עסקים סגורים", "עסקים שלא ענו או סירבו עוברים לכאן, והטיוטה שלהם נמחקת."]
+    }[state.tab];
+    $("list").innerHTML = `<div class="empty"><b>${esc(msgs[0])}</b>${esc(msgs[1])}</div>`;
+    return;
+  }
+  $("list").innerHTML = items.map(renderLead).join("");
+}
+
+function renderMeta(){
+  const t = state.today;
+  $("date").textContent = t && t.date ? t.date : new Date().toLocaleDateString("he-IL");
+  if (t && t.summary) $("summary").textContent = t.summary;
+  const p = state.post;
+  $("post-box").hidden = !(p && p.text);
+  if (p && p.text) $("post-text").textContent = p.text;
+  const items = (state.setup && Array.isArray(state.setup.items)) ? state.setup.items : DEFAULT_SETUP;
+  $("setup").innerHTML = items.map(i =>
+    `<li><span class="dot ${i.done ? "ok" : "todo"}" aria-hidden="true">${i.done ? "✓" : "!"}</span><span>${esc(i.label)}${i.done ? " <small>הושלם</small>" : `<small>${esc(i.hint || "")}</small>`}</span></li>`).join("");
+}
+
+function render(){ renderStats(); renderList(); renderMeta(); }
+
+async function copyText(text){
+  try { await navigator.clipboard.writeText(text); toast("הועתק"); }
+  catch (_) { toast("סמנו את הטקסט והעתיקו ידנית"); }
+}
+
+document.addEventListener("click", async ev => {
+  const tab = ev.target.closest("[data-tab]");
+  if (tab) {
+    state.tab = tab.dataset.tab;
+    try { localStorage.setItem("board-tab", state.tab); } catch (_) {}
+    render(); return;
+  }
+  const cp = ev.target.closest("[data-copy]");
+  if (cp) {
+    const lead = state.leads.find(l => l.id === cp.dataset.copy);
+    if (lead) copyText(lead[cp.dataset.field] || "");
+    return;
+  }
+  if (ev.target.closest("#copy-post")) { copyText((state.post && state.post.text) || ""); return; }
+  const act = ev.target.closest("[data-to]");
+  if (act && state.db) {
+    const id = act.dataset.id, to = act.dataset.to;
+    if (state.busy.has(id)) return;
+    state.busy.add(id); render();
+    const now = new Date().toISOString();
+    const patch = {status: to, updatedAt: now};
+    if (to === "sent") patch.sentAt = now;
+    try { await state.db.doc("leads/" + id).update(patch); toast("עודכן"); }
+    catch (e) { toast(e && e.code === "invalid_argument" ? "אין הרשאה לעדכן את הלוח" : "העדכון לא נשמר, נסו שוב"); }
+    finally { state.busy.delete(id); render(); }
+  }
+});
+
+render();
+
+(async () => {
+  const db = await window.claude?.use?.("db");
+  if (!db) { state.dbError = "פתחו את הלוח מתוך claude.ai כדי לראות את הלידים."; render(); return; }
+  state.db = db;
+  const onErr = e => { state.dbError = "החיבור לנתונים נקטע. רעננו את הדף."; render(); };
+  db.collection("leads").onSnapshot(snap => { state.leads = snap.docs.map(d => ({id: d.id, ...d.data()})); render(); }, onErr);
+  db.doc("meta/today").onSnapshot(s => { state.today = s.exists ? s.data() : null; renderMeta(); }, onErr);
+  db.doc("meta/post").onSnapshot(s => { state.post = s.exists ? s.data() : null; renderMeta(); }, onErr);
+  db.doc("meta/setup").onSnapshot(s => { state.setup = s.exists ? s.data() : null; renderMeta(); }, onErr);
+})();
+</script>
