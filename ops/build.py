@@ -154,6 +154,8 @@ def render_demo(site, cfg):
     license_line = f'<p class="lic">{e(site["license"])}</p>' if site.get("license") else ""
     address = f'<p>{icon("pin")}<span>{e(site["address"])}</span></p>' if site.get("address") else ""
     about = f'<p class="about">{e(site["about"])}</p>' if site.get("about") else ""
+    contact_note = (f'<p>{icon("clock")}<span>{e(site["contact_note"])}</span></p>'
+                    if site.get("contact_note") else f'<p>{icon("pin")}<span>{e(site["city"])} והסביבה</span></p>')
     robots = '<meta name="robots" content="noindex,nofollow">' if (draft or sample) else ""
 
     css = base_css(t) + """
@@ -260,7 +262,7 @@ background:var(--surface);border-top:1px solid var(--line);z-index:40}
 <a class="big" href="{e(call_href)}">{e(phone_text)}</a>
 <div class="cta"><a class="btn btn-main" href="{e(wa_href)}" target="_blank" rel="noopener">{icon('wa')}<span>וואטסאפ</span></a></div>
 </div>
-<div class="card">{address}<p>{icon('clock')}<span>זמינים גם למקרים דחופים, בתיאום מראש</span></p></div>
+<div class="card">{address}{contact_note}</div>
 </div></section>
 </main>
 <footer><div class="wrap">
