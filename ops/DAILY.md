@@ -43,6 +43,10 @@ The owner writes in Hebrew. Everything the owner sees (board text, messages, not
 - `no`: delete `ops/sites/<slug>.json` if it still exists, then set `closed`.
 
 ### 3. Find new leads (target: `config.daily_new_leads`)
+Backlog cap: if 6 or more leads are in `ready`, skip this step and say in the summary that the backlog is
+waiting to be sent. Hours, ratings and years of experience that appear only in a search-engine summary are
+unreliable: leave them out unless they were read from the listing page itself. Skip any business that turns
+out to have its own site (a quick search for its name usually shows it).
 a. Full network: search public directories (d.co.il, b144.co.il, easy.co.il) and Google results for each
    niche in `config.target_niches` × city in `config.target_cities`. Open each listing and collect name,
    profession, city, mobile phone, address, hours, listed services, public rating and a few reviews.
