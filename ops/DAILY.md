@@ -43,8 +43,8 @@ The owner writes in Hebrew. Everything the owner sees (board text, messages, not
 - `no`: delete `ops/sites/<slug>.json` if it still exists, then set `closed`.
 
 ### 3. Find new leads (target: `config.daily_new_leads`)
-Backlog cap: if 6 or more leads are in `ready`, skip this step and say in the summary that the backlog is
-waiting to be sent. Hours, ratings and years of experience that appear only in a search-engine summary are
+Backlog cap: add at most `6 - (leads in ready)` new leads. If no lead has been marked `sent` in the last
+3 days, add none and say in the summary that the backlog is waiting to be sent. Hours, ratings and years of experience that appear only in a search-engine summary are
 unreliable: leave them out unless they were read from the listing page itself. Skip any business that turns
 out to have its own site (a quick search for its name usually shows it).
 a. Full network: search public directories (d.co.il, b144.co.il, easy.co.il) and Google results for each
@@ -67,7 +67,9 @@ link from the landing page, and the landing page link. Vary it each week. No emo
 
 ### 6. Report
 - `meta/today`: date as D.M.YYYY and a two-sentence summary (new leads, who needs a reply, anything blocked).
-- Send one push notification with the same summary (load `PushNotification` with ToolSearch).
+- Send one push notification with the same summary (load `PushNotification` with ToolSearch), but only when
+  something changed since the last run (new leads, a status moved, a setup item done) or on Sundays.
+  Otherwise update `meta/today` silently, so the owner is not nagged with the same reminder every day.
 - If something only the owner can do is blocking (setup items), say so in one line in the summary.
 
 ## Message templates
